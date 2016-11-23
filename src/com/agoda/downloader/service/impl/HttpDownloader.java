@@ -16,8 +16,9 @@ public class HttpDownloader implements DownloadService {
 	private static final int BUFFER_SIZE = 4096;
 	
 	@Override
-	public void donwload(FileURL fileURL, String savePath) {
+	public boolean download(FileURL fileURL, String savePath) {
 		long startTime = System.currentTimeMillis();
+		boolean result = false;
 		
 		try {
 			Logger.info(">> Start download file:" + fileURL.getFullPath());
@@ -39,10 +40,11 @@ public class HttpDownloader implements DownloadService {
 	            inputStream.close();
 	            
 	            Logger.info("!!! Download file finish.");
+	            result = true;
 			} else {
 				Logger.info("No file to download. Server replied HTTP code:" + httpCon.getResponseCode());
 			}
-			
+		
 			httpCon.disconnect();
 		} catch (MalformedURLException e) {
 			Logger.error(e.getMessage(), e);
@@ -52,6 +54,7 @@ public class HttpDownloader implements DownloadService {
 			Logger.info(">> Elapsed time:{0} ms.", (System.currentTimeMillis() - startTime) );
 		}
 		
+		return result;
 	}
 	
 }

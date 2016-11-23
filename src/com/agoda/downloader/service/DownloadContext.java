@@ -9,7 +9,7 @@ public class DownloadContext {
 		this.service = service;
 	}
 	
-	public void download(FileURL fileURL, String savePath) {
-		this.service.donwload(fileURL, savePath);
+	public boolean download(FileURL fileURL, String savePath) {
+		return this.service.download(fileURL, savePath);
 	}
 }
