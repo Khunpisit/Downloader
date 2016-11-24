@@ -8,26 +8,26 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.agoda.downloader.model.FileURL;
-import com.agoda.downloader.service.DownloadService;
+import com.agoda.downloader.model.URLInfo;
+import com.agoda.downloader.service.DownloadManager;
 import com.agoda.downloader.util.Logger;
 
-public class HttpDownloader implements DownloadService {
+public class HttpDownloader implements DownloadManager {
 	private static final int BUFFER_SIZE = 4096;
 	
 	@Override
-	public boolean download(FileURL fileURL, String savePath) {
+	public boolean download(URLInfo urlInfo, String savePath) {
 		long startTime = System.currentTimeMillis();
 		boolean result = false;
 		
 		try {
-			Logger.info(">> Start download file:" + fileURL.getFullPath());
-			URL url = new URL(fileURL.getFullPath());
+			Logger.info(">> Start download file:" + urlInfo.getFullPath());
+			URL url = new URL(urlInfo.getFullPath());
 			HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 			
 			if(HttpURLConnection.HTTP_OK == httpCon.getResponseCode()) {
 	            InputStream inputStream = httpCon.getInputStream();
-	            String saveFilePath = savePath + File.separator + fileURL.getFileName();
+	            String saveFilePath = savePath + File.separator + urlInfo.getFileName();
 	            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
 	            
 	            int bytesRead = -1;
@@ -38,11 +38,10 @@ public class HttpDownloader implements DownloadService {
 	            
 	            outputStream.close();
 	            inputStream.close();
-	            
-	            Logger.info("!!! Download file finish.");
 	            result = true;
+	            Logger.info(">> File has been downloaded successfully.");
 			} else {
-				Logger.info("No file to download. Server replied HTTP code:" + httpCon.getResponseCode());
+				Logger.info("Something goes wrong. Server replied HTTP code:" + httpCon.getResponseCode());
 			}
 		
 			httpCon.disconnect();

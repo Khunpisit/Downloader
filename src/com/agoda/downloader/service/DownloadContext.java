@@ -1,15 +1,15 @@
 package com.agoda.downloader.service;
 
-import com.agoda.downloader.model.FileURL;
+import com.agoda.downloader.model.URLInfo;
 
 public class DownloadContext {
-	private DownloadService service;
+	private DownloadManager manager;
 	
-	public DownloadContext(DownloadService service) {
-		this.service = service;
+	public DownloadContext(DownloadManager service) {
+		this.manager = service;
 	}
 	
-	public boolean download(FileURL fileURL, String savePath) {
-		return this.service.download(fileURL, savePath);
+	public boolean download(URLInfo fileURL, String savePath) {
+		return this.manager.download(fileURL, savePath);
 	}
 }

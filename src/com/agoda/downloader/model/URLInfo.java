@@ -1,18 +1,19 @@
 package com.agoda.downloader.model;
 
-public class FileURL {
+public class URLInfo {
 	private String fullPath;
 	private String protocol;
 	private String host;
 	private String port;
+	private String filepath;
 	private String fileName;
 	private String userName;
 	private String password;
 	
-	public FileURL() {
+	public URLInfo() {
 	}
 	
-	public FileURL(String fullPath, String protocol, String host, String port, String fileName, String userName,
+	public URLInfo(String fullPath, String protocol, String host, String port, String fileName, String userName,
 			String password) {
 		super();
 		this.fullPath = fullPath;
@@ -47,6 +48,12 @@ public class FileURL {
 	public void setPort(String port) {
 		this.port = port;
 	}
+	public String getFilepath() {
+		return filepath;
+	}
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
 	public String getFileName() {
 		return fileName;
 	}
@@ -65,11 +72,12 @@ public class FileURL {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "URL [protocol=" + protocol + ", host=" + host + ", port=" + port + ", fileName=" + fileName
-				+ ", userName=" + userName + ", password=" + password + "]";
+		return "URLInfo [fullPath=" + fullPath + ", protocol=" + protocol + ", host=" + host + ", port=" + port
+				+ ", filepath=" + filepath + ", fileName=" + fileName + ", userName=" + userName + ", password="
+				+ password + "]";
 	}
 	
 }

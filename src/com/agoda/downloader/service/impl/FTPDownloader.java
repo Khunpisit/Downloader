@@ -9,30 +9,30 @@ import java.io.OutputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-import com.agoda.downloader.model.FileURL;
-import com.agoda.downloader.service.DownloadService;
+import com.agoda.downloader.model.URLInfo;
+import com.agoda.downloader.service.DownloadManager;
 import com.agoda.downloader.util.Logger;
 
-public class FTPDownloader implements DownloadService{
+public class FTPDownloader implements DownloadManager{
 
 	@Override
-	public boolean download(FileURL fileURL, String savePath) {
+	public boolean download(URLInfo urlInfo, String savePath) {
 		long startTime = System.currentTimeMillis();
 		boolean result = false;
 		FTPClient ftpClient = new FTPClient();
 		
         try {
-        	Logger.info(">> Start download file:" + fileURL.getFullPath());
-        	String server = fileURL.getHost();
-            ftpClient.connect(server, Integer.parseInt(fileURL.getPort()));
-            ftpClient.login( fileURL.getUserName(), fileURL.getPassword());
+        	Logger.info(">> Start download file:" + urlInfo.getFullPath());
+        	String server = urlInfo.getHost();
+            ftpClient.connect(server, Integer.parseInt(urlInfo.getPort()));
+            ftpClient.login( urlInfo.getUserName(), urlInfo.getPassword());
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
-            String[] fileName = fileURL.getFileName().split("\\/");
+            String[] fileName = urlInfo.getFileName().split("\\/");
             File downloadFile1 = new File(savePath + File.separator + fileName[fileName.length - 1]);
             OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile1));
-            boolean success = ftpClient.retrieveFile(fileURL.getFileName(), outputStream1);
+            boolean success = ftpClient.retrieveFile(urlInfo.getFileName(), outputStream1);
             outputStream1.close();
  
             if (success) {
