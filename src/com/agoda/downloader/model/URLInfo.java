@@ -13,17 +13,21 @@ public class URLInfo {
 	public URLInfo() {
 	}
 	
-	public URLInfo(String fullPath, String protocol, String host, String port, String fileName, String userName,
-			String password) {
+	
+	public URLInfo(String fullPath, String protocol, String host, String port, String filepath, String fileName,
+			String userName, String password) {
 		super();
 		this.fullPath = fullPath;
 		this.protocol = protocol;
 		this.host = host;
 		this.port = port;
+		this.filepath = filepath;
 		this.fileName = fileName;
 		this.userName = userName;
 		this.password = password;
 	}
+
+
 	public String getFullPath() {
 		return fullPath;
 	}
