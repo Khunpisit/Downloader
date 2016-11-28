@@ -10,17 +10,19 @@ import com.agoda.downloader.service.impl.FTPDownloader;
 import com.agoda.downloader.service.impl.HttpDownloader;
 import com.agoda.downloader.service.impl.SFTPDownloader;
 import com.agoda.downloader.util.Logger;
-import com.agoda.downloader.util.Util;
+import com.agoda.downloader.util.Configuration;
 
 public class DownloadRunner {
 
 	public static void main(String[] args) {
+		Logger.info("############### Hi every body, This is Downloader in text mode. ###############");
+		Logger.info("############### 	 !!! Just enjoy file downloading :)    ###############");
 		String savePath = "/home/deuce/Downloads/downloader";
 		
 		String projectPath = System.getProperty("user.dir");
 		Logger.info("projectPath={0}", projectPath);
 		
-		List<URLInfo> urlList = Util.loadURLs(projectPath + File.separator + "conf/url.conf");
+		List<URLInfo> urlList = Configuration.loadURLs(projectPath + File.separator + "conf/url.conf");
 		
 		urlList.parallelStream().forEach(url -> {
 			switch(url.getProtocol().toUpperCase()) {

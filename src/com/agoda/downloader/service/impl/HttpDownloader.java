@@ -12,6 +12,7 @@ import com.agoda.downloader.constant.DownloadConstant;
 import com.agoda.downloader.model.URLInfo;
 import com.agoda.downloader.service.DownloadManager;
 import com.agoda.downloader.util.Logger;
+import com.agoda.downloader.util.ProgressBar;
 
 public class HttpDownloader implements DownloadManager {
 	
@@ -21,7 +22,6 @@ public class HttpDownloader implements DownloadManager {
 		boolean result = false;
 		
 		try {
-			Logger.info(">> Start download file: {0}", urlInfo.getFullPath());
 			URL url = new URL(urlInfo.getFullPath());
 			HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 			
@@ -30,16 +30,24 @@ public class HttpDownloader implements DownloadManager {
 	            String saveFilePath = savePath + File.separator + urlInfo.getFileName();
 	            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
 	            
+	            int fileSize = httpCon.getContentLength();
 	            int bytesRead = -1;
+	            
+	            ProgressBar bar = new ProgressBar();
+	            bar.update(0, fileSize);
 	            byte[] buffer = new byte[DownloadConstant.BUFFER_SIZE];
+
+	            int progressVolume = 0;
 	            while((bytesRead = inputStream.read(buffer)) != -1) {
+	            	bar.update(progressVolume += bytesRead, fileSize);
 	            	outputStream.write(buffer, 0, bytesRead);
 	            }
+	            
+	            Logger.debug("download {0} completed, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
 	            
 	            outputStream.close();
 	            inputStream.close();
 	            result = true;
-	            Logger.info(">> {0} has been downloaded successfully.", urlInfo.getFileName());
 			} else {
 				Logger.info("Something goes wrong. Server replied HTTP code: {0}", httpCon.getResponseCode());
 			}
@@ -49,8 +57,6 @@ public class HttpDownloader implements DownloadManager {
 			Logger.error(e.getMessage(), e);
 		} catch (IOException e) {
 			Logger.error(e.getMessage(), e);
-		} finally {
-			Logger.info(">> Elapsed time:{0} ms.", (System.currentTimeMillis() - startTime) );
 		}
 		
 		return result;

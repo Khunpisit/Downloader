@@ -9,14 +9,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import com.agoda.downloader.constant.DownloadConstant;
 import com.agoda.downloader.model.URLInfo;
 import com.agoda.downloader.service.DownloadManager;
 import com.agoda.downloader.util.Logger;
+import com.agoda.downloader.util.ProgressBar;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 
 public class SFTPDownloader implements DownloadManager {
@@ -28,7 +31,6 @@ public class SFTPDownloader implements DownloadManager {
 		boolean result = false;
 		
 		try {
-			Logger.info(">> Start download file:" + urlInfo.getFullPath());
 			Session session = jsch.getSession(urlInfo.getUserName(), urlInfo.getHost(), Integer.parseInt(urlInfo.getPort()));
 			session.setPassword(urlInfo.getPassword());
 			Properties config = new Properties();
@@ -39,22 +41,29 @@ public class SFTPDownloader implements DownloadManager {
 			channel.connect();
 			
 			ChannelSftp sftp = (ChannelSftp) channel;
+			SftpATTRS sttr = sftp.lstat(urlInfo.getFilepath() + File.separator + urlInfo.getFileName());
+			long fileSize = sttr.getSize();
 			sftp.cd(urlInfo.getFilepath());
-			byte[] buffer = new byte[1024];
+			
 			BufferedInputStream bis = new BufferedInputStream(sftp.get(urlInfo.getFileName()));
 			File file = new File(savePath + File.separator + urlInfo.getFileName());
-			OutputStream outputStream = new FileOutputStream(file);
+			OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
 			BufferedOutputStream bos = new BufferedOutputStream(outputStream);
 			
-			int readCount;
-			while((readCount = bis.read(buffer)) > 0) {
-				bos.write(buffer, 0, readCount);
+			byte[] buffer = new byte[DownloadConstant.BUFFER_SIZE];
+			ProgressBar bar = new ProgressBar();
+			int progressVolume = 0;
+			int bytesRead = -1;
+			while((bytesRead = bis.read(buffer)) != -1) {
+				bar.update(progressVolume += bytesRead, (int)fileSize);
+				bos.write(buffer, 0, bytesRead);
 			}
 			
+			Logger.debug("download {0} completed, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
+	           			
 			bis.close();
 			bos.close();
 			result = true;
-			Logger.info(">> File has been downloaded successfully.");
 			
 		} catch (NumberFormatException e) {
 			Logger.error(e.getMessage(), e);
@@ -66,8 +75,6 @@ public class SFTPDownloader implements DownloadManager {
 			Logger.error(e.getMessage(), e);
 		} catch (IOException e) {
 			Logger.error(e.getMessage(), e);
-		}finally {
-			Logger.info(">> Elapsed time:{0} ms.", (System.currentTimeMillis() - startTime) );
 		}
 		
 		return result;

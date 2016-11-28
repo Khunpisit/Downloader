@@ -17,6 +17,15 @@ public class Logger {
 		System.out.println(INFO_PREFIX + msg);
 	}
 	
+	public static void debug(String pattern, Object... arguments) {
+		String msg = MessageFormat.format(pattern, arguments);
+		debug(msg);
+	}	
+	
+	public static void debug(String msg) {
+		System.out.println(msg);
+	}
+	
 	public static void error(String msg) {
 		System.out.println(ERROR_PREFIX + msg);
 	}

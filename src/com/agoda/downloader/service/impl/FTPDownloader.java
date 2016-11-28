@@ -9,11 +9,13 @@ import java.io.OutputStream;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import com.agoda.downloader.constant.DownloadConstant;
 import com.agoda.downloader.model.URLInfo;
 import com.agoda.downloader.service.DownloadManager;
 import com.agoda.downloader.util.Logger;
+import com.agoda.downloader.util.ProgressBar;
 
 public class FTPDownloader implements DownloadManager{
 
@@ -24,25 +26,32 @@ public class FTPDownloader implements DownloadManager{
 		FTPClient ftp = new FTPClient();
 		
         try {
-        	Logger.info(">> Start download file: {0}", urlInfo.getFullPath());
         	String server = urlInfo.getHost();
             ftp.connect(server, Integer.parseInt(urlInfo.getPort()));
             ftp.login( urlInfo.getUserName(), urlInfo.getPassword());
             ftp.enterLocalPassiveMode();
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             
-            String remoteFile = urlInfo.getFilepath() + File.separator + urlInfo.getFileName();
+            String remoteFile = File.separator + urlInfo.getFilepath() + File.separator + urlInfo.getFileName();
+            FTPFile file = ftp.mlistFile(remoteFile);
             File downloadFile = new File(savePath + File.separator + urlInfo.getFileName());
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
             InputStream inputStream = ftp.retrieveFileStream(remoteFile);
+           
             byte[] bytesArray = new byte[DownloadConstant.BUFFER_SIZE];
             int bytesRead = -1;
+            long size = file.getSize();
+            int fileSize = (int)size;
+            ProgressBar bar = new ProgressBar();
+            bar.update(0, fileSize);
+            int progressVolume = 0;
+
             while((bytesRead = inputStream.read(bytesArray)) != -1) {
+            	bar.update(progressVolume += bytesRead, fileSize);
             	outputStream.write(bytesArray, 0, bytesRead);
             }
-            
             if(ftp.completePendingCommand()) {
-            	Logger.info(">> File {0} has been downloaded successfully.", urlInfo.getFileName());
+           	 	Logger.debug("download {0} completed, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
             	result = true;
             }
             
@@ -60,8 +69,6 @@ public class FTPDownloader implements DownloadManager{
             } catch (IOException e) {
                 Logger.error(e.getMessage(), e);
             }
-            
-            Logger.info(">> Download {0}, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
         }
         
 		return result;
