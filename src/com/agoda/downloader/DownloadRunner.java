@@ -3,7 +3,7 @@ package com.agoda.downloader;
 import java.io.File;
 import java.util.List;
 
-import com.agoda.downloader.constant.Protocol;
+import com.agoda.downloader.constant.DownloadConstant;
 import com.agoda.downloader.model.URLInfo;
 import com.agoda.downloader.service.DownloadContext;
 import com.agoda.downloader.service.impl.FTPDownloader;
@@ -24,17 +24,17 @@ public class DownloadRunner {
 		
 		urlList.parallelStream().forEach(url -> {
 			switch(url.getProtocol().toUpperCase()) {
-				case Protocol.HTTP:
-				case Protocol.HTTPS:
+				case DownloadConstant.HTTP:
+				case DownloadConstant.HTTPS:
 					DownloadContext http = new DownloadContext(new HttpDownloader());
 					http.download(url, savePath);
 					break;
-				case Protocol.FTP:
-				case Protocol.FTPS:
+				case DownloadConstant.FTP:
+				case DownloadConstant.FTPS:
 					DownloadContext ftp = new DownloadContext(new FTPDownloader());
 					ftp.download(url, savePath);
 					break;
-				case Protocol.SFTP:
+				case DownloadConstant.SFTP:
 					DownloadContext sftp = new DownloadContext(new SFTPDownloader());
 					sftp.download(url, savePath);
 					break;

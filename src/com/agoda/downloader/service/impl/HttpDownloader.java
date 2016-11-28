@@ -8,12 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.agoda.downloader.constant.DownloadConstant;
 import com.agoda.downloader.model.URLInfo;
 import com.agoda.downloader.service.DownloadManager;
 import com.agoda.downloader.util.Logger;
 
 public class HttpDownloader implements DownloadManager {
-	private static final int BUFFER_SIZE = 4096;
 	
 	@Override
 	public boolean download(URLInfo urlInfo, String savePath) {
@@ -21,7 +21,7 @@ public class HttpDownloader implements DownloadManager {
 		boolean result = false;
 		
 		try {
-			Logger.info(">> Start download file:" + urlInfo.getFullPath());
+			Logger.info(">> Start download file: {0}", urlInfo.getFullPath());
 			URL url = new URL(urlInfo.getFullPath());
 			HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 			
@@ -31,7 +31,7 @@ public class HttpDownloader implements DownloadManager {
 	            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
 	            
 	            int bytesRead = -1;
-	            byte[] buffer = new byte[BUFFER_SIZE];
+	            byte[] buffer = new byte[DownloadConstant.BUFFER_SIZE];
 	            while((bytesRead = inputStream.read(buffer)) != -1) {
 	            	outputStream.write(buffer, 0, bytesRead);
 	            }
@@ -39,9 +39,9 @@ public class HttpDownloader implements DownloadManager {
 	            outputStream.close();
 	            inputStream.close();
 	            result = true;
-	            Logger.info(">> File has been downloaded successfully.");
+	            Logger.info(">> {0} has been downloaded successfully.", urlInfo.getFileName());
 			} else {
-				Logger.info("Something goes wrong. Server replied HTTP code:" + httpCon.getResponseCode());
+				Logger.info("Something goes wrong. Server replied HTTP code: {0}", httpCon.getResponseCode());
 			}
 		
 			httpCon.disconnect();
