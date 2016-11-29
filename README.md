@@ -12,16 +12,17 @@
 define path to save file on local disk in file run/path.conf 
   > save_path=your local path
 
-config URLs for download files in file run/url.conf (Please use enter key as delimiter)
+config URLs in file run/url.conf (Please use enter key as delimiter)
 
   > ftp://kfc.com/file/wing_zap_calories.pdf
+
   > user:pass@sftp://university.ac.th/download/final_exam.doc
 
 ### Run
 Linux
 
 ```sh
-$ cd run/
+$ cd run/m
 $ sh downloader.sh
 ```
 
