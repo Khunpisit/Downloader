@@ -33,5 +33,9 @@ Windows
  - Check disk free space before save file
  - Fix bugs
 
+### Note
+Please ensure your network connection have no proxy setting
+
 **Free Software, Hell Yeah!**
+
 [download jre 1.8]: <http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html>
