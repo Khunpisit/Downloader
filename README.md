@@ -14,7 +14,6 @@ define path to save file on local disk in file run/path.conf
 
 config URLs for download files in file run/url.conf (Please use enter key as delimiter)
 
-  > http://abc.co.th/img/a.jpg
   > ftp://kfc.com/file/wing_zap_calories.pdf
   > user:pass@sftp://university.ac.th/download/final_exam.doc
 
