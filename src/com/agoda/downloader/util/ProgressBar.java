@@ -8,6 +8,7 @@ public class ProgressBar {
     }
     
     public void update(int done, int total) {
+    	
         char[] workchars = {'|', '/', '-', '\\'};
         String format = "\r%3d%% %s %c";
 

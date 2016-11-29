@@ -1,11 +1,13 @@
 package com.agoda.downloader.util;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,11 +22,14 @@ public class Configuration {
 		try(Stream<String> stream = Files.lines(Paths.get(filePath))) {
 			list = stream.parallel()
 						 .map(line -> {
+							Logger.info("config:{0}", line);
 							String username = "";
 							String password = "";
 							String remainsUrl = "";
 							String host = "";
 							String port = "";
+							String url = "";
+							String protocol = "";
 							
 							int atSignLastIndex = line.lastIndexOf("@");
 							if(atSignLastIndex > -1) {
@@ -38,9 +43,13 @@ public class Configuration {
 							}
 							
 							int colonIndex = remainsUrl.indexOf(":");
-							String protocol = remainsUrl.substring(0, colonIndex);
-							String url = remainsUrl.substring(colonIndex + 3); // remove double slash before host name e.g. developers.agoda.com:80/files/img/test.jpg
-							int pathSlashIndex = url.indexOf("/"); // find first slash which separated host and file path
+							
+							if(colonIndex > -1) {
+								protocol = remainsUrl.substring(0, colonIndex);
+								url = remainsUrl.substring(colonIndex + 3); // Remove double slash before host name.
+							}
+						
+							int pathSlashIndex = url.indexOf("/"); // Find a first slash index between host and file path
 							String hostAndPort = url.substring(0, pathSlashIndex); 
 							if(hostAndPort.indexOf(":") > -1) {
 								String[] hostAndPortArr = hostAndPort.split(":");
@@ -56,23 +65,33 @@ public class Configuration {
 							String fileName = fullFilePath.substring(filePathIndex + 1);
 							
 							URLInfo urlInfo = new URLInfo(line, protocol, host, port, path, fileName, username, password);
-							Logger.info(urlInfo.toString());
 							return urlInfo;
 						}).collect(Collectors.toList());
-				 
+			
+			Logger.info("load url.conf completed. Elapse time:{0}", (System.currentTimeMillis() - startTime) + " ms." );
 		} catch(IOException e) {
 			Logger.error(e.getMessage(), e);
-		} finally {
-			Logger.info("load url.conf completed. Elapse time:{0}", (System.currentTimeMillis() - startTime) + " ms." );
 		}
 		
 		return list;
 	}
 	
-	public static void main(String[] args) {
-		String workingDir = System.getProperty("user.dir");
-		Logger.info(workingDir);
-		loadURLs(workingDir + File.separator + "conf/url.conf");
+	public static String getSavePath(String filePath) {
+		Properties prop = new Properties();
+		InputStream input;
+		String savePath = "";
+		
+		try{
+			input = new FileInputStream(filePath);
+			prop.load(input);
+			savePath = prop.getProperty("save_path");
+			Logger.info("Save file path:{0}", savePath);
+			
+		} catch (IOException e) {
+			Logger.error(e.getMessage(), e);
+		}
+		
+		return savePath;
 	}
 
 }

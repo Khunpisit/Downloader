@@ -31,19 +31,17 @@ public class HttpDownloader implements DownloadManager {
 	            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
 	            
 	            int fileSize = httpCon.getContentLength();
-	            int bytesRead = -1;
-	            
-	            ProgressBar bar = new ProgressBar();
-	            bar.update(0, fileSize);
 	            byte[] buffer = new byte[DownloadConstant.BUFFER_SIZE];
-
 	            int progressVolume = 0;
+	            int bytesRead = -1;
+	            ProgressBar bar = new ProgressBar();
+	            bar.update(progressVolume, fileSize);
+	            
 	            while((bytesRead = inputStream.read(buffer)) != -1) {
-	            	bar.update(progressVolume += bytesRead, fileSize);
+	            	bar.update((progressVolume += bytesRead), fileSize);
 	            	outputStream.write(buffer, 0, bytesRead);
 	            }
-	            
-	            Logger.debug("download {0} completed, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
+	            Logger.debug("download {0} completed, Elapsed time:{1} ms. size:{2}", urlInfo.getFileName(), (System.currentTimeMillis() - startTime), progressVolume);
 	            
 	            outputStream.close();
 	            inputStream.close();
@@ -54,9 +52,9 @@ public class HttpDownloader implements DownloadManager {
 		
 			httpCon.disconnect();
 		} catch (MalformedURLException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		} catch (IOException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		}
 		
 		return result;

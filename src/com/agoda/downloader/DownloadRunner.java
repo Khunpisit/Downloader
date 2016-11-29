@@ -15,14 +15,12 @@ import com.agoda.downloader.util.Configuration;
 public class DownloadRunner {
 
 	public static void main(String[] args) {
-		Logger.info("############### Hi every body, This is Downloader in text mode. ###############");
-		Logger.info("############### 	 !!! Just enjoy file downloading :)    ###############");
-		String savePath = "/home/deuce/Downloads/downloader";
-		
+		Logger.info(">> Hi every body, This is Downloader in text mode.");
+		Logger.info(">> Just enjoy to download files :)");
 		String projectPath = System.getProperty("user.dir");
-		Logger.info("projectPath={0}", projectPath);
 		
-		List<URLInfo> urlList = Configuration.loadURLs(projectPath + File.separator + "conf/url.conf");
+		String savePath = Configuration.getSavePath(projectPath + File.separator + "path.conf");
+		List<URLInfo> urlList = Configuration.loadURLs(projectPath + File.separator + "url.conf");
 		
 		urlList.parallelStream().forEach(url -> {
 			switch(url.getProtocol().toUpperCase()) {
@@ -41,7 +39,7 @@ public class DownloadRunner {
 					sftp.download(url, savePath);
 					break;
 				default:
-					throw new IllegalArgumentException("no protocal support:" + url.getProtocol());
+					throw new IllegalArgumentException("!!! no protocal support:" + url.getProtocol());
 			}
 		});
 	}
