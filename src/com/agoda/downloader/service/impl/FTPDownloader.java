@@ -39,19 +39,19 @@ public class FTPDownloader implements DownloadManager{
             InputStream inputStream = ftp.retrieveFileStream(remoteFile);
            
             byte[] bytesArray = new byte[DownloadConstant.BUFFER_SIZE];
-            int bytesRead = -1;
             long size = file.getSize();
             int fileSize = (int)size;
-            ProgressBar bar = new ProgressBar();
-            bar.update(0, fileSize);
+            int bytesRead = -1;
             int progressVolume = 0;
+            ProgressBar bar = new ProgressBar();
+            bar.update(progressVolume, fileSize);
 
             while((bytesRead = inputStream.read(bytesArray)) != -1) {
-            	bar.update(progressVolume += bytesRead, fileSize);
+            	bar.update((progressVolume += bytesRead), fileSize);
             	outputStream.write(bytesArray, 0, bytesRead);
             }
             if(ftp.completePendingCommand()) {
-           	 	Logger.debug("download {0} completed, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
+            	Logger.debug("download {0} completed, Elapsed time:{1} ms. size:{2}", urlInfo.getFileName(), (System.currentTimeMillis() - startTime), progressVolume);
             	result = true;
             }
             

@@ -52,15 +52,16 @@ public class SFTPDownloader implements DownloadManager {
 			
 			byte[] buffer = new byte[DownloadConstant.BUFFER_SIZE];
 			ProgressBar bar = new ProgressBar();
-			int progressVolume = 0;
 			int bytesRead = -1;
+			int progressVolume = 0;
+			bar.update(progressVolume, (int)fileSize);
+			
 			while((bytesRead = bis.read(buffer)) != -1) {
 				bar.update(progressVolume += bytesRead, (int)fileSize);
 				bos.write(buffer, 0, bytesRead);
 			}
-			
-			Logger.debug("download {0} completed, Elapsed time:{1} ms.", urlInfo.getFileName(), (System.currentTimeMillis() - startTime) );
-	           			
+	      	Logger.debug("download {0} completed, Elapsed time:{1} ms. size:{2}", urlInfo.getFileName(), (System.currentTimeMillis() - startTime), progressVolume);
+	                 			
 			bis.close();
 			bos.close();
 			result = true;

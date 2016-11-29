@@ -1,11 +1,13 @@
 package com.agoda.downloader.util;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,8 +41,8 @@ public class Configuration {
 							
 							int colonIndex = remainsUrl.indexOf(":");
 							String protocol = remainsUrl.substring(0, colonIndex);
-							String url = remainsUrl.substring(colonIndex + 3); // remove double slash before host name e.g. developers.agoda.com:80/files/img/test.jpg
-							int pathSlashIndex = url.indexOf("/"); // find first slash which separated host and file path
+							String url = remainsUrl.substring(colonIndex + 3); // Remove double slash before host name.
+							int pathSlashIndex = url.indexOf("/"); // Find a first slash index between host and file path
 							String hostAndPort = url.substring(0, pathSlashIndex); 
 							if(hostAndPort.indexOf(":") > -1) {
 								String[] hostAndPortArr = hostAndPort.split(":");
@@ -69,10 +71,22 @@ public class Configuration {
 		return list;
 	}
 	
-	public static void main(String[] args) {
-		String workingDir = System.getProperty("user.dir");
-		Logger.info(workingDir);
-		loadURLs(workingDir + File.separator + "conf/url.conf");
+	public static String getSavePath(String filePath) {
+		Properties prop = new Properties();
+		InputStream input;
+		String savePath = "";
+		
+		try{
+			input = new FileInputStream(filePath);
+			prop.load(input);
+			savePath = prop.getProperty("save_path");
+			Logger.info("Save file path:{0}", savePath);
+			
+		} catch (IOException e) {
+			Logger.error(e.getMessage(), e);
+		}
+		
+		return savePath;
 	}
 
 }
