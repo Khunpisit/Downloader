@@ -18,7 +18,6 @@ public class DownloadRunner {
 		Logger.info(">> Hi every body, This is Downloader in text mode.");
 		Logger.info(">> Just enjoy to download files :)");
 		String projectPath = System.getProperty("user.dir");
-		
 		String savePath = Configuration.getSavePath(projectPath + File.separator + "path.conf");
 		List<URLInfo> urlList = Configuration.loadURLs(projectPath + File.separator + "url.conf");
 		
