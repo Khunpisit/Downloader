@@ -27,6 +27,8 @@ public class Configuration {
 							String remainsUrl = "";
 							String host = "";
 							String port = "";
+							String url = "";
+							String protocol = "";
 							
 							int atSignLastIndex = line.lastIndexOf("@");
 							if(atSignLastIndex > -1) {
@@ -40,8 +42,12 @@ public class Configuration {
 							}
 							
 							int colonIndex = remainsUrl.indexOf(":");
-							String protocol = remainsUrl.substring(0, colonIndex);
-							String url = remainsUrl.substring(colonIndex + 3); // Remove double slash before host name.
+							
+							if(colonIndex > -1) {
+								protocol = remainsUrl.substring(0, colonIndex);
+								url = remainsUrl.substring(colonIndex + 3); // Remove double slash before host name.
+							}
+						
 							int pathSlashIndex = url.indexOf("/"); // Find a first slash index between host and file path
 							String hostAndPort = url.substring(0, pathSlashIndex); 
 							if(hostAndPort.indexOf(":") > -1) {
@@ -61,11 +67,10 @@ public class Configuration {
 							Logger.info(urlInfo.toString());
 							return urlInfo;
 						}).collect(Collectors.toList());
-				 
+			
+			Logger.info("load url.conf completed. Elapse time:{0}", (System.currentTimeMillis() - startTime) + " ms." );
 		} catch(IOException e) {
 			Logger.error(e.getMessage(), e);
-		} finally {
-			Logger.info("load url.conf completed. Elapse time:{0}", (System.currentTimeMillis() - startTime) + " ms." );
 		}
 		
 		return list;
