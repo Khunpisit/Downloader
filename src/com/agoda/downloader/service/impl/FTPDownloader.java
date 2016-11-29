@@ -59,7 +59,7 @@ public class FTPDownloader implements DownloadManager{
             inputStream.close();
            
         } catch (IOException e) {
-            Logger.error(e.getMessage(), e);
+            Logger.error(e.getMessage());
         } finally {
             try {
                 if (ftp.isConnected()) {
@@ -67,7 +67,7 @@ public class FTPDownloader implements DownloadManager{
                     ftp.disconnect();
                 }
             } catch (IOException e) {
-                Logger.error(e.getMessage(), e);
+                Logger.error(e.getMessage());
             }
         }
         

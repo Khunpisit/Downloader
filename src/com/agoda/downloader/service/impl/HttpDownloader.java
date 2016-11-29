@@ -52,9 +52,9 @@ public class HttpDownloader implements DownloadManager {
 		
 			httpCon.disconnect();
 		} catch (MalformedURLException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		} catch (IOException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		}
 		
 		return result;

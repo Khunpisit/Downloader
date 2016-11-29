@@ -67,15 +67,15 @@ public class SFTPDownloader implements DownloadManager {
 			result = true;
 			
 		} catch (NumberFormatException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		} catch (JSchException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		} catch (SftpException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		} catch (FileNotFoundException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		} catch (IOException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage());
 		}
 		
 		return result;

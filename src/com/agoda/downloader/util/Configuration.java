@@ -22,6 +22,7 @@ public class Configuration {
 		try(Stream<String> stream = Files.lines(Paths.get(filePath))) {
 			list = stream.parallel()
 						 .map(line -> {
+							Logger.info("config:{0}", line);
 							String username = "";
 							String password = "";
 							String remainsUrl = "";
@@ -64,7 +65,6 @@ public class Configuration {
 							String fileName = fullFilePath.substring(filePathIndex + 1);
 							
 							URLInfo urlInfo = new URLInfo(line, protocol, host, port, path, fileName, username, password);
-							Logger.info(urlInfo.toString());
 							return urlInfo;
 						}).collect(Collectors.toList());
 			
