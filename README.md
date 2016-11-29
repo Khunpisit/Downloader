@@ -1,17 +1,19 @@
 # Downloader
 
- Downloader is a small program that can download multiple files from multiple URLs 
+ Downloader is a small program which can download multiple files from multiple URLs 
  and support multiple protocols (now support http, https, ftp, ftps and sftp).
 
 ### Setup environment
-  - Install JRE 1.8 [download jre 1.8] (required jre1.8.0_111 or above)
+  - Install JRE 1.8 (required jre1.8.0_111 or above) [download jre 1.8] 
   - Update variable java_home in file run/downloader.sh (Linux) or run/downloader.cmd (Windows) to point to jre1.8/bin
  
 ### Configuration
+
 define path to save file on local disk in file run/path.conf 
   > save_path=your local path
 
-config URLs in file run/url.conf (Please use enter key as delimiter)
+config URLs for download files in file run/url.conf (Please use enter key as delimiter)
+
   > http://abc.co.th/img/a.jpg
   > ftp://kfc.com/file/wing_zap_calories.pdf
   > user:pass@sftp://university.ac.th/download/final_exam.doc
@@ -25,7 +27,6 @@ $ sh downloader.sh
 ```
 
 Windows
-
  double click downloader.cmd
  
 ### Todos
