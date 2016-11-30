@@ -22,7 +22,7 @@ config URLs in file run/url.conf (Please use enter key as delimiter)
 Linux
 
 ```sh
-$ cd run/m
+$ cd run/
 $ sh downloader.sh
 ```
 
